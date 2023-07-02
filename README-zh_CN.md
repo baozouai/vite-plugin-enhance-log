@@ -8,7 +8,9 @@
 
 [![NPM version][npm-image]][npm-url] ![NPM downloads][download-image]
 
-![Test][test-badge] ![codecov][codecov-badge]
+![Test][test-badge] 
+
+<!-- ![codecov][codecov-badge] -->
 
 
 [npm-image]: https://img.shields.io/npm/v/vite-plugin-enhance-log.svg?style=flat-square
@@ -58,12 +60,6 @@ interface Options {
   preTip?: string
   /** 每个参数分隔符，默认空字符串，你也可以使用换行符\n，分号；逗号，甚至猪猪🐖都行~ */
   splitBy?: boolean
-  /** 
-   * 是否需要endLine
-   * @example
-   * console.log('line of 1 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀', ..., 'line of 10 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀')
-   *  */
-  endLine?: boolean
 }
 ```
 

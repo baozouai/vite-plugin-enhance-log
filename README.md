@@ -8,7 +8,9 @@
 
  [![NPM version][npm-image]][npm-url] ![NPM downloads][download-image]
 
-![Test][test-badge] ![codecov][codecov-badge]
+![Test][test-badge] 
+
+<!-- ![codecov][codecov-badge] -->
 
 
 [npm-image]: https://img.shields.io/npm/v/vite-plugin-enhance-log.svg?style=flat-square
@@ -62,12 +64,6 @@ interface Options {
   preTip?: string
   /** the delimiter for each parameter is an empty string by default, you can also use a newline \n, a semicolon';' a comma',' or even a pig '🐖' */
   splitBy?: boolean
-  /** 
-   * need endLine, default false
-   * @example
-   * console.log('line of 1 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀', ..., 'line of 10 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀')
-   *  */
-  endLine?: boolean
 }
 ```
 ##  🔨 Usage
