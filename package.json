@@ -22,7 +22,7 @@
     "Add the file name of the log file",
     "add separator for every argument"
   ],
-  "main": "dist/index.js",
+  "main": "dist/index.cjs",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "files": [
@@ -31,7 +31,7 @@
   "scripts": {
     "clean": "rm -rf dist",
     "lint": "eslint . --fix",
-    "build": "tsup",
+    "build": "unbuild",
     "test": "vitest",
     "tag": "bumpp",
     "prepublishOnly": "npm run clean && npm run build",
@@ -67,6 +67,7 @@
     "simple-git-hooks": "^2.8.1",
     "tsup": "^7.1.0",
     "typescript": "^4.9.5",
+    "unbuild": "^1.2.1",
     "vite": "^4.3.9",
     "vite-plugin-inspect": "^0.7.16",
     "vitest": "^0.30.1"
