@@ -2,7 +2,7 @@
   "name": "vite-plugin-enhance-log",
   "version": "0.0.1",
   "packageManager": "pnpm@8.3.1",
-  "description": "A babel Plugin to add log line, add log argument name and separator",
+  "description": "A vite plugin to log filename, log argument name and separator",
   "author": "baozouai <baozouai@gmail.com>",
   "license": "MIT",
   "homepage": "https://github.com/baozouai/vite-plugin-enhance-log",
