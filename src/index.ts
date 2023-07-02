@@ -2,7 +2,7 @@ import traverse from '@babel/traverse'
 import { parse } from '@babel/parser'
 import generate from '@babel/generator'
 import * as t from '@babel/types'
-import type { FilterPattern, PluginOption } from 'vite'
+import type { PluginOption } from 'vite'
 import { createFilter } from 'vite'
 import type { StringLiteral } from '@babel/types'
 
@@ -43,19 +43,19 @@ export interface Options {
   splitBy?: string
   // /** need endLine, default false */
   // endLine?: boolean
-  /**
-   * Rules to include transforming target.
-   *
-   * @default [/\.[jt]sx?$/, /\.vue\??/]
-   */
-  include?: FilterPattern
+  // /**
+  //  * Rules to include transforming target.
+  //  *
+  //  * @default [/\.[jt]sx?$/, /\.vue$/]
+  //  */
+  // include?: FilterPattern
 
-  /**
-   * Rules to exclude transforming target.
-   *
-   * @default [/node_modules/, /\.git/]
-   */
-  exclude?: FilterPattern
+  // /**
+  //  * Rules to exclude transforming target.
+  //  *
+  //  * @default [/node_modules/, /\.git/]
+  //  */
+  // exclude?: FilterPattern
 }
 
 function generateStrNode(str: string): StringLiteral & { skip: boolean } {
@@ -80,8 +80,8 @@ export default function enhanceLogPlugin(options: Options = {}): PluginOption {
   const splitNode = generateStrNode(splitBy)
   let root = ''
   const filter = createFilter(
-    options.include || [/\.[jt]sx?$/, /\.vue$/, /\.vue\?vue/, /\.svelte$/],
-    options.exclude || [/[\\/]node_modules[\\/]/, /[\\/]\.git[\\/]/],
+    [/\.[jt]sx?$/, /\.vue$/],
+    [/[\\/]node_modules[\\/]/, /[\\/]\.git[\\/]/],
   )
   return {
     name: 'enhance-log',

@@ -21,3 +21,9 @@ function onClick() {
     </button>
   </div>
 </template>
+
+<style>
+button {
+  color: red;
+}
+</style>
