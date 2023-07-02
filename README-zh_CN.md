@@ -75,7 +75,7 @@ import EnhanceLog from 'vite-plugin-enhance-log'
 
 const config = defineConfig({
   plugins: [
-
+    // 如果用vue, 请确保 vuePlugin 在 log plugin 之前
     EnhanceLog({
       splitBy: '\n',
       preTip: '🐖🐖🐖🐖🐖🐖🐖🐖🐖🐖',

@@ -14,12 +14,8 @@
     "strictNullChecks": true,
     "forceConsistentCasingInFileNames": true,
     "types": [
-      "vite/client",
-      "vite-plugin-enhance-log"
-    ],
-    "paths": {
-      "~/*": ["src/*"]
-    }
+      "vite/client"
+    ]
   },
   "exclude": ["dist", "node_modules"]
 }
