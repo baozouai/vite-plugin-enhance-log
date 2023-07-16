@@ -4,7 +4,7 @@
 </p>
 
 <div align="center">
-  A vite Plugin to add log filename, log argument name and separator
+  A vite Plugin to add log filename, log line, log argument name and separator
 
  [![NPM version][npm-image]][npm-url] ![NPM downloads][download-image]
 

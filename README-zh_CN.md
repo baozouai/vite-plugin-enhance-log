@@ -4,7 +4,7 @@
 </p>
 
 <div align="center">
-  一个用来为console.log添加代码所在文件名，log参数名以及添加分隔符的 vite 插件
+  一个用来为console.log添加代码所在文件名，所在行，log参数名以及添加分隔符的 vite 插件
 
 [![NPM version][npm-image]][npm-url] ![NPM downloads][download-image]
 

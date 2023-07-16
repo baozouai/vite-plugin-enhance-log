@@ -2,7 +2,7 @@
   "name": "vite-plugin-enhance-log",
   "version": "0.2.1",
   "packageManager": "pnpm@8.3.1",
-  "description": "A vite plugin to log filename, log argument name and separator",
+  "description": "A vite plugin to log filename, log line, log argument name and separator",
   "author": "baozouai <baozouai@gmail.com>",
   "license": "MIT",
   "homepage": "https://github.com/baozouai/vite-plugin-enhance-log",
@@ -20,6 +20,7 @@
     "vite-plugin",
     "add log argument name",
     "Add the file name of the log file",
+    "Add the line of the log",
     "add separator for every argument"
   ],
   "main": "dist/index.cjs",
