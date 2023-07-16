@@ -65,7 +65,7 @@ interface Options {
   /** the delimiter for each parameter is an empty string by default, you can also use a newline \n, a semicolon';' a comma',' or even a pig '🐖' */
   splitBy?: boolean
   /** 
-   * need endLine, default false
+   * need endLine, default false， only if startLine unequal endLine
    * @example
    * console.log('line of 1 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 ~ main.tsx', ..., 'line of 10 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 ~ main.tsx')
    *  */
@@ -133,13 +133,13 @@ If the file path is too long:
 and you only want to print the file name without the directory prefix, you can configure `enableFileName: { enableDir: false }`:
 ![img](./assets/only_file_name.png)
 
-<!-- For another example, if there is a log that spans multiple lines, you want the number of lines at the beginning and end of the log, with the log entity in the middle, then you can set endLine to true:
+For another example, if there is a log that spans multiple lines, you want the number of lines at the beginning and end of the log, with the log entity in the middle, then you can set endLine to true:
 
 ![img](./assets/log_multi_line.png)
 
 ![img](./assets/log_multi_line_res.png)
 
-> We can see that the number of lines at the beginning is 29, and the number of lines at the end is 44, which is consistent with the source code -->
+> We can see that the number of lines at the beginning is 29, and the number of lines at the end is 44, which is consistent with the source code
 
 ## 📄 License
 

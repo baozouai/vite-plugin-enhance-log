@@ -49,7 +49,7 @@ export interface Options {
    * ,
    */
   splitBy?: string
-  /** need endLine, default false */
+  /** need endLine, default false, only if startLine unequal endLine */
   endLine?: boolean
 }
 
@@ -69,7 +69,7 @@ export default function enhanceLogPlugin(options: Options = {}): PluginOption {
   const {
     preTip = DEFAULT_PRE_TIP, splitBy = '',
     enableFileName = true,
-    endLine = false,
+    endLine: enableEndLine = false,
   } = options
   const splitNode = generateStrNode(splitBy)
   let root = ''
@@ -125,12 +125,13 @@ export default function enhanceLogPlugin(options: Options = {}): PluginOption {
 
             const { loc } = path.node
             if (loc) {
+              let startLine = null
               const { line, column } = loc.start
-              const { line: startLine } = consumer.originalPositionFor({
+              const { line: originStartLine } = consumer.originalPositionFor({
                 line,
                 column,
               }) || {}
-
+              startLine = originStartLine
               let combinePreTip = preTip
               if (enableFileName) {
                 let relativeFilename = id.replace(`${root}/`, '')
@@ -141,12 +142,15 @@ export default function enhanceLogPlugin(options: Options = {}): PluginOption {
               }
               const startLineTipNode = stringLiteral(`line of ${startLine} ${combinePreTip}:\n`)
               nodeArguments.unshift(startLineTipNode)
-              if (endLine) {
+              if (enableEndLine) {
                 const { line, column } = loc.end
                 const { line: endLine } = consumer.originalPositionFor({
                   line,
                   column,
                 }) || {}
+                // if startLine === endLine, needn't log endLine
+                if (startLine === endLine)
+                  return
                 const endLineTipNode = stringLiteral(`\nline of ${endLine} ${combinePreTip}:\n`)
                 nodeArguments.push(endLineTipNode)
               }
