@@ -64,6 +64,12 @@ interface Options {
   preTip?: string
   /** the delimiter for each parameter is an empty string by default, you can also use a newline \n, a semicolon';' a comma',' or even a pig '🐖' */
   splitBy?: boolean
+  /** 
+   * need endLine, default false
+   * @example
+   * console.log('line of 1 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 ~ main.tsx', ..., 'line of 10 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 ~ main.tsx')
+   *  */
+  endLine?: boolean
 }
 ```
 ##  🔨 Usage
@@ -133,7 +139,7 @@ and you only want to print the file name without the directory prefix, you can c
 
 ![img](./assets/log_multi_line_res.png)
 
-> We can see that the number of lines at the beginning is 13, and the number of lines at the end is 44, which is consistent with the source code -->
+> We can see that the number of lines at the beginning is 29, and the number of lines at the end is 44, which is consistent with the source code -->
 
 ## 📄 License
 

@@ -7,7 +7,7 @@ const config = defineConfig({
   plugins: [
     Vue(),
     EnhanceLog({
-      splitBy: ';',
+      splitBy: '\n',
       preTip: '🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥',
       enableFileName: true,
     }),

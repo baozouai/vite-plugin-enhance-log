@@ -5,6 +5,8 @@ import * as t from '@babel/types'
 import type { PluginOption } from 'vite'
 import { createFilter } from 'vite'
 import type { StringLiteral } from '@babel/types'
+import { SourceMapConsumer } from 'source-map'
+import type { RawSourceMap } from 'source-map'
 
 export type EnableFileName = boolean | {
   /**
@@ -41,21 +43,8 @@ export interface Options {
    * ,
    */
   splitBy?: string
-  // /** need endLine, default false */
-  // endLine?: boolean
-  // /**
-  //  * Rules to include transforming target.
-  //  *
-  //  * @default [/\.[jt]sx?$/, /\.vue$/]
-  //  */
-  // include?: FilterPattern
-
-  // /**
-  //  * Rules to exclude transforming target.
-  //  *
-  //  * @default [/node_modules/, /\.git/]
-  //  */
-  // exclude?: FilterPattern
+  /** need endLine, default false */
+  endLine?: boolean
 }
 
 function generateStrNode(str: string): StringLiteral & { skip: boolean } {
@@ -75,7 +64,7 @@ export default function enhanceLogPlugin(options: Options = {}): PluginOption {
   const {
     preTip = DEFAULT_PRE_TIP, splitBy = '',
     enableFileName = true,
-  // endLine = false
+    endLine = false,
   } = options
   const splitNode = generateStrNode(splitBy)
   let root = ''
@@ -88,13 +77,15 @@ export default function enhanceLogPlugin(options: Options = {}): PluginOption {
     configResolved(config) {
       root = config.root
     },
-    transform(code, id) {
+    async transform(code, id) {
       if (!filter(id))
         return
-
+      const rawSourcemap = this.getCombinedSourcemap()
       const ast = parse(code, {
         sourceType: 'unambiguous',
+        sourceFilename: id,
       })
+      const consumer = await new SourceMapConsumer(rawSourcemap as RawSourceMap)
 
       traverse(ast, {
         CallExpression(path) {
@@ -135,33 +126,43 @@ export default function enhanceLogPlugin(options: Options = {}): PluginOption {
             // the last needn't split
             if (nodeArguments[nodeArguments.length - 1] === splitNode)
               nodeArguments.pop()
-            // const { loc } = path.node
-            // if (loc) {
-            //   const startLine = loc.start.line
-            //   const startLineTipNode = t.stringLiteral(`line of ${startLine} ${preTip}:\n`)
-            //   nodeArguments.unshift(startLineTipNode)
-            //   if (endLine) {
-            //     const endLine = loc.end.line
-            //     const endLineTipNode = t.stringLiteral(`\nline of ${endLine} ${preTip}:\n`)
-            //     nodeArguments.push(endLineTipNode)
-            //   }
-            // }
-            let startLineTip = preTip
 
-            if (enableFileName) {
-              let relativeFilename = id.replace(`${root}/`, '')
-              if (typeof enableFileName === 'object' && !enableFileName.enableDir)
-                relativeFilename = relativeFilename.replace(/.*\//, '')
+            const { loc } = path.node
+            if (loc) {
+              const { line, column } = loc.start
+              const { line: startLine } = consumer.originalPositionFor({
+                line,
+                column,
+              }) || {}
 
-              startLineTip += ` ~ ${relativeFilename}`
+              let combinePreTip = preTip
+              if (enableFileName) {
+                let relativeFilename = id.replace(`${root}/`, '')
+                if (typeof enableFileName === 'object' && !enableFileName.enableDir)
+                  relativeFilename = relativeFilename.replace(/.*\//, '')
+
+                combinePreTip = ` ~ ${relativeFilename} ${combinePreTip}`
+              }
+              const startLineTipNode = t.stringLiteral(`line of ${startLine} ${combinePreTip}:\n`)
+              nodeArguments.unshift(startLineTipNode)
+              if (endLine) {
+                const { line, column } = loc.end
+                const { line: endLine } = consumer.originalPositionFor({
+                  line,
+                  column,
+                }) || {}
+                const endLineTipNode = t.stringLiteral(`\nline of ${endLine} ${combinePreTip}:\n`)
+                nodeArguments.push(endLineTipNode)
+              }
             }
-            const startLineTipNode = t.stringLiteral(`${startLineTip}:\n`)
-            nodeArguments.unshift(startLineTipNode)
           }
         },
       })
 
       const { code: newCode, map } = generate(ast, {
+        sourceFileName: id,
+        retainLines: true,
+        sourceMaps: true,
       })
 
       return {
