@@ -58,7 +58,6 @@ function generateStrNode(str: string): StringLiteral & { skip: boolean } {
 }
 
 const DEFAULT_PRE_TIP = '🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀'
-const SKIP_KEY = '@@vite-plugin-enhance-logSkip'
 
 export default function enhanceLogPlugin(options: Options = {}): PluginOption {
   const {
@@ -92,16 +91,6 @@ export default function enhanceLogPlugin(options: Options = {}): PluginOption {
         CallExpression(path) {
           const calleeCode = generate(path.node.callee).code
           if (calleeCode === 'console.log') {
-            // add comment to skip if enter next time
-            const { trailingComments } = path.node
-            const shouldSkip = (trailingComments || []).some((item) => {
-              return item.type === 'CommentBlock' && item.value === SKIP_KEY
-            })
-            if (shouldSkip)
-              return
-
-            t.addComment(path.node, 'trailing', SKIP_KEY)
-
             const nodeArguments = path.node.arguments
             for (let i = 0; i < nodeArguments.length; i++) {
               const argument = nodeArguments[i]
@@ -142,7 +131,7 @@ export default function enhanceLogPlugin(options: Options = {}): PluginOption {
                 if (typeof enableFileName === 'object' && !enableFileName.enableDir)
                   relativeFilename = relativeFilename.replace(/.*\//, '')
 
-                combinePreTip = ` ~ ${relativeFilename} ${combinePreTip}`
+                combinePreTip = `~ ${relativeFilename} ${combinePreTip}`
               }
               const startLineTipNode = t.stringLiteral(`line of ${startLine} ${combinePreTip}:\n`)
               nodeArguments.unshift(startLineTipNode)
