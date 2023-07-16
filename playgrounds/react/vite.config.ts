@@ -7,7 +7,6 @@ import EnhanceLog from '../../src'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    react(),
     EnhanceLog({
       splitBy: '\n',
       preTip: '🐖🐖🐖🐖🐖🐖🐖🐖🐖',
@@ -15,6 +14,7 @@ export default defineConfig({
         enableDir: false,
       },
     }),
+    react(),
 
     Inspect(),
   ],

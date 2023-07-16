@@ -77,6 +77,7 @@ export default function enhanceLogPlugin(options: Options = {}): PluginOption {
     configResolved(config) {
       root = config.root
     },
+    enforce: 'post',
     async transform(code, id) {
       if (!filter(id))
         return
