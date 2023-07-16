@@ -1,13 +1,19 @@
 import traverse from '@babel/traverse'
 import { parse } from '@babel/parser'
 import generate from '@babel/generator'
-import * as t from '@babel/types'
 import type { PluginOption } from 'vite'
 import { createFilter } from 'vite'
 import type { StringLiteral } from '@babel/types'
 import { SourceMapConsumer } from 'source-map'
 import type { RawSourceMap } from 'source-map'
 
+function stringLiteral(value: string) {
+  const stringLiteralNode: StringLiteral = {
+    type: 'StringLiteral',
+    value,
+  }
+  return stringLiteralNode
+}
 export type EnableFileName = boolean | {
   /**
    * @default true
@@ -48,7 +54,7 @@ export interface Options {
 }
 
 function generateStrNode(str: string): StringLiteral & { skip: boolean } {
-  const node = t.stringLiteral(str)
+  const node = stringLiteral(str)
 
   // @ts-ignore
   node.skip = true
@@ -97,8 +103,8 @@ export default function enhanceLogPlugin(options: Options = {}): PluginOption {
               // @ts-ignore
               if (argument.skip)
                 continue
-              if (!t.isLiteral(argument)) {
-                if (t.isIdentifier(argument) && argument.name === 'undefined') {
+              if (!argument.type.endsWith('Literal')) {
+                if (argument.type === 'Identifier' && argument.name === 'undefined') {
                   nodeArguments.splice(i + 1, 0, splitNode)
                   continue
                 }
@@ -133,7 +139,7 @@ export default function enhanceLogPlugin(options: Options = {}): PluginOption {
 
                 combinePreTip = `~ ${relativeFilename} ${combinePreTip}`
               }
-              const startLineTipNode = t.stringLiteral(`line of ${startLine} ${combinePreTip}:\n`)
+              const startLineTipNode = stringLiteral(`line of ${startLine} ${combinePreTip}:\n`)
               nodeArguments.unshift(startLineTipNode)
               if (endLine) {
                 const { line, column } = loc.end
@@ -141,7 +147,7 @@ export default function enhanceLogPlugin(options: Options = {}): PluginOption {
                   line,
                   column,
                 }) || {}
-                const endLineTipNode = t.stringLiteral(`\nline of ${endLine} ${combinePreTip}:\n`)
+                const endLineTipNode = stringLiteral(`\nline of ${endLine} ${combinePreTip}:\n`)
                 nodeArguments.push(endLineTipNode)
               }
             }

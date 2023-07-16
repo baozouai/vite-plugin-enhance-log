@@ -10,6 +10,7 @@ const config = defineConfig({
       splitBy: '\n',
       preTip: '🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥',
       enableFileName: true,
+      endLine: true,
     }),
     Inspect(),
   ],
