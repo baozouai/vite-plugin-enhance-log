@@ -7,7 +7,10 @@ const index: FC = () => {
   console.log(a, b)
   return (
     <div>
-      <button onClick={() => console.log(a, b)}>点击log a和b</button>
+      <button onClick={() => {
+        debugger
+        console.log(a, b)
+      }}>点击log a和b</button>
       <br/>
       <br/>
       <br/>

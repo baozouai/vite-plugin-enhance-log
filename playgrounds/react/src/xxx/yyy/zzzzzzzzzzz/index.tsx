@@ -1,7 +1,7 @@
 export default () => {
   const a = 1
   const b = 2
-  // debugger
+  debugger
   console.log(a, b)
   return <div onClick={() => {
     debugger
