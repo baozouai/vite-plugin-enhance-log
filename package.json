@@ -38,8 +38,9 @@
     "prepublishOnly": "npm run clean && npm run build",
     "release": "npm publish",
     "prepare": "husky install",
-    "play": "pnpm --filter vue dev",
-    "play:react": "pnpm --filter react dev"
+    "play": "pnpm -C playgrounds/vue dev",
+    "play:react": "pnpm -C playgrounds/react dev",
+    "play:astro": "pnpm -C playgrounds/astro dev"
   },
   "peerDependencies": {
     "vite": "^2.9.0 || ^3.0.0 || ^4.0.0"

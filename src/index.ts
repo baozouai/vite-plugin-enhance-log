@@ -74,7 +74,7 @@ export default function enhanceLogPlugin(options: Options = {}): PluginOption {
   const splitNode = generateStrNode(splitBy)
   let root = ''
   const filter = createFilter(
-    [/\.[jt]sx?$/, /\.vue$/],
+    [/\.[jt]sx?$/, /\.vue$/, /\.svelte$/, /\.astro$/],
     [/[\\/]node_modules[\\/]/, /[\\/]\.git[\\/]/],
   )
   return {
