@@ -107,6 +107,7 @@ export default config
 pnpm play # 对应vue
 # 或者
 pnpm play:react # 对应react
+play play:astro # 对应astro
 ```
 
 来启动项目

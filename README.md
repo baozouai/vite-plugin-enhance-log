@@ -111,6 +111,7 @@ Clone the project and start playgrounds by running:
 pnpm play # corresponding to vue
 # or
 pnpm play:react # corresponds to react
+pnpm play:astro # corresponds to astro
 ```
 
 
