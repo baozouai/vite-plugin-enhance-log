@@ -112,7 +112,7 @@ play play:astro # 对应astro
 
 来启动项目
 
-具体配置可以看 [vue/vite.config.ts](./playgrounds/vue/vite.config.ts) 或者 [react/vite.config.ts](./playgrounds/react/vite.config.ts)
+具体配置可以看 [vue/vite.config.ts](./playgrounds/vue/vite.config.ts) 或者 [react/vite.config.ts](./playgrounds/react/vite.config.ts)、[astro.config.mjs](./playgrounds/astro.config.mjs)
 
 比如说，你不喜欢小 🚀，你喜欢猪猪 🐖，那可以配置 preTip 为 🐖🐖🐖🐖🐖🐖🐖🐖🐖🐖：
 
