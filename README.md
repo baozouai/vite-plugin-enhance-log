@@ -33,7 +33,7 @@ English | [中文](./README-zh_CN.md)
 ## 🔥 Features
 
 - Support to log the flog filename, 
-- Support tolog line
+- Support to log line
 - Support to log  argument name
 - Support to log separator
 - Support different files ——  👉 .js, .jsx, .ts, .tsx, .vue, .svelte, and .astro
