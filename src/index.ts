@@ -53,6 +53,22 @@ export interface Options {
   endLine?: boolean
 }
 
+const colorGreen = '\x1B[32m'
+const colorBlue = '\x1B[34m'
+const colorReset = '\x1B[0m'
+
+function handleStartFileNameTip(filePath: string, lineNumber: number) {
+  if (!filePath)
+    return ''
+  return ` ~ ${colorGreen}${filePath}:${colorBlue}${lineNumber}${colorReset}`
+}
+
+function handleEndFileNameTip(filePath: string, lineNumber: number) {
+  if (!filePath)
+    return ''
+  return ` ~ ${filePath}:${lineNumber}`
+}
+
 function generateStrNode(str: string): StringLiteral & { skip: boolean } {
   const node = stringLiteral(str)
 
@@ -77,6 +93,10 @@ export default function enhanceLogPlugin(options: Options = {}): PluginOption {
     [/\.[jt]sx?$/, /\.vue$/, /\.svelte$/, /\.astro$/],
     [/[\\/]node_modules[\\/]/, /[\\/]\.git[\\/]/],
   )
+
+  function generateLineOfTip(relativeFilename: string, lineNumber: number) {
+    return `${relativeFilename ? '' : `line of ${lineNumber} `}${preTip}`
+  }
   return {
     name: 'enhance-log',
     configResolved(config) {
@@ -132,15 +152,15 @@ export default function enhanceLogPlugin(options: Options = {}): PluginOption {
                 column,
               }) || {}
               startLine = originStartLine
-              let combinePreTip = preTip
+
+              let relativeFilename = ''
+
               if (enableFileName) {
-                let relativeFilename = id.replace(`${root}/`, '')
+                relativeFilename = id.replace(`${root}`, '').split('?')[0]
                 if (typeof enableFileName === 'object' && !enableFileName.enableDir)
                   relativeFilename = relativeFilename.replace(/.*\//, '')
-
-                combinePreTip = `~ ${relativeFilename} ${combinePreTip}`
               }
-              const startLineTipNode = stringLiteral(`line of ${startLine} ${combinePreTip}:\n`)
+              const startLineTipNode = stringLiteral(`${generateLineOfTip(relativeFilename, startLine!)}${handleStartFileNameTip(relativeFilename, startLine!)}\n`)
               nodeArguments.unshift(startLineTipNode)
               if (enableEndLine) {
                 const { line, column } = loc.end
@@ -151,7 +171,7 @@ export default function enhanceLogPlugin(options: Options = {}): PluginOption {
                 // if startLine === endLine, needn't log endLine
                 if (startLine === endLine)
                   return
-                const endLineTipNode = stringLiteral(`\nline of ${endLine} ${combinePreTip}:\n`)
+                const endLineTipNode = stringLiteral(`\n${generateLineOfTip(relativeFilename, endLine!)}${handleEndFileNameTip(relativeFilename, endLine!)}\n`)
                 nodeArguments.push(endLineTipNode)
               }
             }

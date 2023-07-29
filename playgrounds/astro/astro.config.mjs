@@ -7,6 +7,7 @@ export default defineConfig({
   vite: {
     plugins: [enhanceLog({
       splitBy: '\n',
+      endLine: true,
     }), inspect()],
   },
 })
