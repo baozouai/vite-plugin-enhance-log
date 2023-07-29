@@ -114,6 +114,10 @@ play play:astro # 对应astro
 
 具体配置可以看 [vue/vite.config.ts](./playgrounds/vue/vite.config.ts) 或者 [react/vite.config.ts](./playgrounds/react/vite.config.ts)、[astro.config.mjs](./playgrounds/astro/astro.config.mjs)
 
+
+> 📢 注意，从0.5.0开始，如果打印文件名的话，会将log所在行放到文件名后面，类似这样：
+> ![img](./assets/file_end_line.png)
+
 比如说，你不喜欢小 🚀，你喜欢猪猪 🐖，那可以配置 preTip 为 🐖🐖🐖🐖🐖🐖🐖🐖🐖🐖：
 
 ![img](./assets/pig_pretip.png)
@@ -132,7 +136,7 @@ play play:astro # 对应astro
 
 比如说，你希望知道log所在的文件名，那么可以配置enableFileName为true（当然默认就是true）：
 
-![img](./assets/filename.png)
+![img](./assets/file_end_line.png)
 
 如果文件路径太长:
 ![img](./assets/deep_file.png)
