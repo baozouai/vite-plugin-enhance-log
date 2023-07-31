@@ -156,7 +156,7 @@ export default function enhanceLogPlugin(options: Options = {}): PluginOption {
               let relativeFilename = ''
 
               if (enableFileName) {
-                relativeFilename = id.replace(`${root}`, '').split('?')[0]
+                relativeFilename = id.replace(`${root}/`, '').split('?')[0]
                 if (typeof enableFileName === 'object' && !enableFileName.enableDir)
                   relativeFilename = relativeFilename.replace(/.*\//, '')
               }
