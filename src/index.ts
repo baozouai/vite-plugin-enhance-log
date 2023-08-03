@@ -53,17 +53,17 @@ export interface Options {
   endLine?: boolean
 }
 
-const colorGreen = '\x1B[32m'
-const colorBlue = '\x1B[34m'
-const colorReset = '\x1B[0m'
+// const colorGreen = '\x1B[32m'
+// const colorBlue = '\x1B[34m'
+// const colorReset = '\x1B[0m'
 
-function handleStartFileNameTip(filePath: string, lineNumber: number) {
-  if (!filePath)
-    return ''
-  return ` ~ ${colorGreen}${filePath}:${colorBlue}${lineNumber}${colorReset}`
-}
+// function handleStartFileNameTip(filePath: string, lineNumber: number) {
+//   if (!filePath)
+//     return ''
+//   return ` ~ ${colorGreen}${filePath}:${colorBlue}${lineNumber}${colorReset}`
+// }
 
-function handleEndFileNameTip(filePath: string, lineNumber: number) {
+function handleFileNameTip(filePath: string, lineNumber: number) {
   if (!filePath)
     return ''
   return ` ~ ${filePath}:${lineNumber}`
@@ -160,7 +160,7 @@ export default function enhanceLogPlugin(options: Options = {}): PluginOption {
                 if (typeof enableFileName === 'object' && !enableFileName.enableDir)
                   relativeFilename = relativeFilename.replace(/.*\//, '')
               }
-              const startLineTipNode = stringLiteral(`${generateLineOfTip(relativeFilename, startLine!)}${handleStartFileNameTip(relativeFilename, startLine!)}\n`)
+              const startLineTipNode = stringLiteral(`${generateLineOfTip(relativeFilename, startLine!)}${handleFileNameTip(relativeFilename, startLine!)}\n`)
               nodeArguments.unshift(startLineTipNode)
               if (enableEndLine) {
                 const { line, column } = loc.end
@@ -171,7 +171,7 @@ export default function enhanceLogPlugin(options: Options = {}): PluginOption {
                 // if startLine === endLine, needn't log endLine
                 if (startLine === endLine)
                   return
-                const endLineTipNode = stringLiteral(`\n${generateLineOfTip(relativeFilename, endLine!)}${handleEndFileNameTip(relativeFilename, endLine!)}\n`)
+                const endLineTipNode = stringLiteral(`\n${generateLineOfTip(relativeFilename, endLine!)}${handleFileNameTip(relativeFilename, endLine!)}\n`)
                 nodeArguments.push(endLineTipNode)
               }
             }
