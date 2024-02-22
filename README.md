@@ -32,7 +32,8 @@ English | [中文](./README-zh_CN.md)
 
 ## 🔥 Features
 
-- Support to log the flog filename, 
+- Support to log the log filename, custom filename, highlight filename
+- custom preTip by different logMethod
 - Support to log line
 - Support to log  argument name
 - Support to log separator
