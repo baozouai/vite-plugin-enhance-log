@@ -39,6 +39,11 @@ export type EnableFileName = boolean | {
 export interface Options {
   /** colorful filename，but The firefox can't recognize color labels, and garbled characters appear */
   colorFileName?: boolean
+  /**
+   * match log method reg, default /console\.log/, you can custom
+   * @example
+   * logMethodReg: /console\.(log|error|warn|info|debug)/
+   */
   logMethodReg?: RegExp
   // /**
   //  * tip of start argument default 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
@@ -52,10 +57,18 @@ export interface Options {
   enableFileName?: EnableFileName
   /**
    * tip of start argument default 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
+   * also, you can custom preTip by logMethod
    * @example
    * console.log('🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀', ...)
+   * preTip: (logMethod) => {
+   * if (logMethod === 'console.error') return '❌❌❌❌❌'
+   * if (logMethod === 'console.warn') return '🚨🚨🚨🚨🚨'
+   * if (logMethod === 'console.info') return '💡💡💡💡💡'
+   * if (logMethod === 'console.debug') return '🐞🐞🐞🐞🐞'
+   * return '🚀🚀🚀🚀🚀'
+   * }
    */
-  preTip?: string
+  preTip?: string | ((logMethod: string) => string)
   /**
    * every arg split by
    * @example
@@ -112,7 +125,7 @@ export default function enhanceLogPlugin(options: Options = {}): PluginOption {
     [/[\\/]node_modules[\\/]/, /[\\/]\.git[\\/]/],
   )
 
-  function generateLineOfTip(relativeFilename: string, lineNumber: number) {
+  function generateLineOfTip(relativeFilename: string, lineNumber: number, preTip: string) {
     return `${relativeFilename ? '' : `line of ${lineNumber} `}${preTip}`
   }
   return {
@@ -184,7 +197,10 @@ export default function enhanceLogPlugin(options: Options = {}): PluginOption {
                     relativeFilename = relativeFilename.replace(/.*\//, '')
                 }
               }
-              const startLineTipNode = stringLiteral(`${generateLineOfTip(relativeFilename, startLine!)}${(colorFileName ? handleStartFileNameTip : handleFileNameTip)(relativeFilename, startLine!)}\n`)
+              let newPreTip = preTip
+              if (typeof preTip === 'function')
+                newPreTip = preTip(calleeCode)
+              const startLineTipNode = stringLiteral(`${generateLineOfTip(relativeFilename, startLine!, newPreTip as string)}${(colorFileName ? handleStartFileNameTip : handleFileNameTip)(relativeFilename, startLine!)}\n`)
               nodeArguments.unshift(startLineTipNode)
               if (enableEndLine) {
                 const { line, column } = loc.end
@@ -195,7 +211,7 @@ export default function enhanceLogPlugin(options: Options = {}): PluginOption {
                 // if startLine === endLine, needn't log endLine
                 if (startLine === endLine)
                   return
-                const endLineTipNode = stringLiteral(`\n${generateLineOfTip(relativeFilename, endLine!)}${handleFileNameTip(relativeFilename, endLine!)}\n`)
+                const endLineTipNode = stringLiteral(`\n${generateLineOfTip(relativeFilename, endLine!, newPreTip as string)}${handleFileNameTip(relativeFilename, endLine!)}\n`)
                 nodeArguments.push(endLineTipNode)
               }
             }
