@@ -14,6 +14,10 @@ function stringLiteral(value: string) {
   }
   return stringLiteralNode
 }
+
+function isObj(obj: any): obj is object {
+  return obj && typeof obj === 'object'
+}
 export type EnableFileName = boolean | {
   /**
    * @default true
@@ -23,8 +27,19 @@ export type EnableFileName = boolean | {
    * if enableDir is false, the log will be index.ts
    */
   enableDir?: boolean
+  /**
+   * @example
+   * filename: /Users/xxx/code/your-project/packages/main/src/index.ts
+   * root: /Users/xxx/code/your-project/packages/main
+   * rootSplitExp: /(.*?)packages
+   * the log will be main/src/index.ts
+   */
+  custom?: (filename: string) => string
 }
 export interface Options {
+  /** colorful filename，but The firefox can't recognize color labels, and garbled characters appear */
+  colorFileName?: boolean
+  logMethodReg?: RegExp
   // /**
   //  * tip of start argument default 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
   //  * @example
@@ -53,15 +68,15 @@ export interface Options {
   endLine?: boolean
 }
 
-// const colorGreen = '\x1B[32m'
-// const colorBlue = '\x1B[34m'
-// const colorReset = '\x1B[0m'
+const colorGreen = '\x1B[32m'
+const colorBlue = '\x1B[34m'
+const colorReset = '\x1B[0m'
 
-// function handleStartFileNameTip(filePath: string, lineNumber: number) {
-//   if (!filePath)
-//     return ''
-//   return ` ~ ${colorGreen}${filePath}:${colorBlue}${lineNumber}${colorReset}`
-// }
+function handleStartFileNameTip(filePath: string, lineNumber: number) {
+  if (!filePath)
+    return ''
+  return ` ~ ${colorGreen}${filePath}:${colorBlue}${lineNumber}${colorReset}`
+}
 
 function handleFileNameTip(filePath: string, lineNumber: number) {
   if (!filePath)
@@ -83,7 +98,10 @@ const DEFAULT_PRE_TIP = '🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀'
 
 export default function enhanceLogPlugin(options: Options = {}): PluginOption {
   const {
-    preTip = DEFAULT_PRE_TIP, splitBy = '',
+    colorFileName,
+    logMethodReg = /console\.log/,
+    preTip = DEFAULT_PRE_TIP,
+    splitBy = '',
     enableFileName = true,
     endLine: enableEndLine = false,
   } = options
@@ -116,7 +134,7 @@ export default function enhanceLogPlugin(options: Options = {}): PluginOption {
       traverse(ast, {
         CallExpression(path) {
           const calleeCode = generate(path.node.callee).code
-          if (calleeCode === 'console.log') {
+          if (logMethodReg.test(calleeCode)) {
             const nodeArguments = path.node.arguments
             for (let i = 0; i < nodeArguments.length; i++) {
               const argument = nodeArguments[i]
@@ -156,11 +174,17 @@ export default function enhanceLogPlugin(options: Options = {}): PluginOption {
               let relativeFilename = ''
 
               if (enableFileName) {
-                relativeFilename = id.replace(`${root}/`, '').split('?')[0]
-                if (typeof enableFileName === 'object' && !enableFileName.enableDir)
-                  relativeFilename = relativeFilename.replace(/.*\//, '')
+                const splitId = id.split('?')[0]
+                if (isObj(enableFileName) && typeof enableFileName.custom === 'function') {
+                  relativeFilename = enableFileName.custom(splitId)
+                }
+                else {
+                  relativeFilename = splitId.replace(`${root}/`, '')
+                  if (isObj(enableFileName) && !enableFileName.enableDir)
+                    relativeFilename = relativeFilename.replace(/.*\//, '')
+                }
               }
-              const startLineTipNode = stringLiteral(`${generateLineOfTip(relativeFilename, startLine!)}${handleFileNameTip(relativeFilename, startLine!)}\n`)
+              const startLineTipNode = stringLiteral(`${generateLineOfTip(relativeFilename, startLine!)}${(colorFileName ? handleStartFileNameTip : handleFileNameTip)(relativeFilename, startLine!)}\n`)
               nodeArguments.unshift(startLineTipNode)
               if (enableEndLine) {
                 const { line, column } = loc.end

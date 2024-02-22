@@ -5,12 +5,18 @@ import EnhanceLog from '../../src'
 
 const config = defineConfig({
   plugins: [
-    Vue(),
+    Vue({}),
     EnhanceLog({
+      colorFileName: true,
       splitBy: '\n',
       preTip: '🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥',
-      enableFileName: true,
-      endLine: true,
+      enableFileName: {
+        enableDir: true,
+        // custom(filename) {
+        //   return filename.replace(/.*?playgrounds/, '')
+        // },
+      },
+      // endLine: true,
     }),
     Inspect(),
   ],
