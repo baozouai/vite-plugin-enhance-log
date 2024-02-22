@@ -55,6 +55,14 @@ npm i vite-plugin-enhance-log -D
 
 ```ts
 interface Options {
+  /** colorful filename，but The firefox can't recognize color labels, and garbled characters appear */
+  colorFileName?: boolean
+  /**
+   * match log method reg, default /console\.log/, you can custom
+   * @example
+   * logMethodReg: /console\.(log|error|warn|info|debug)/
+   */
+  logMethodReg?: RegExp
   /**
    * log file name
    * If your file name is too long,
@@ -65,13 +73,29 @@ interface Options {
    */
   enableFileName?: boolean | {
     enableDir?: boolean
+      /**
+     * @example
+     * filename: /Users/xxx/code/your-project/packages/main/src/index.ts
+     * root: /Users/xxx/code/your-project/packages/main
+     * rootSplitExp: /(.*?)packages
+     * the log will be main/src/index.ts
+     */
+    custom?: (filename: string) => string
   }
   /**
    * tip of start argument default 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
+   * also, you can custom preTip by logMethod
    * @example
-   * console.log(' 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀', ...)
+   * console.log('🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀', ...)
+   * preTip: (logMethod) => {
+   * if (logMethod === 'console.error') return '❌❌❌❌❌'
+   * if (logMethod === 'console.warn') return '🚨🚨🚨🚨🚨'
+   * if (logMethod === 'console.info') return '💡💡💡💡💡'
+   * if (logMethod === 'console.debug') return '🐞🐞🐞🐞🐞'
+   * return '🚀🚀🚀🚀🚀'
+   * }
    */
-  preTip?: string
+  preTip?: string | ((logMethod: string) => string)
   /** the delimiter for each parameter is an empty string by default, you can also use a newline \n, a semicolon';' a comma',' or even a pig '🐖' */
   splitBy?: boolean
   /** 

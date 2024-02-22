@@ -45,14 +45,8 @@ export interface Options {
    * logMethodReg: /console\.(log|error|warn|info|debug)/
    */
   logMethodReg?: RegExp
-  // /**
-  //  * tip of start argument default 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
-  //  * @example
-  //  * console.log('line of 1 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀', ...)
-  //  */
-  // preTip?: string
   /**
-   * to log filename, default false
+   * to log filename, default true
    */
   enableFileName?: EnableFileName
   /**

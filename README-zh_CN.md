@@ -53,6 +53,14 @@ npm i vite-plugin-enhance-log -D
 
 ```ts
 interface Options {
+  /** 高亮文件名（firefox不支持） */
+  colorFileName?: boolean
+  /**
+   * 匹配自定义log方法，默认是 /console\.log/
+   * @example
+   * logMethodReg: /console\.(log|error|warn|info|debug)/
+   */
+  logMethodReg?: RegExp
   /**
    * 打印文件名
    * 如果你文件名太长，希望不显示文件path的目录，比如src/pages/xxx/yyy/a.tsx, 那么可以配置enableDir为false，则只打印a.tsx
@@ -61,13 +69,30 @@ interface Options {
    */
   enableFileName?: boolean | {
     enableDir?: boolean
+    /**
+     * 自定义文件名
+     * @example
+     * filename: /Users/xxx/code/your-project/packages/main/src/index.ts
+     * root: /Users/xxx/code/your-project/packages/main
+     * rootSplitExp: /(.*?)packages
+     * the log will be main/src/index.ts
+     */
+    custom?: (filename: string) => string
   }
   /**
-   * 打印的前缀提示，这样方便快速找到log 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
+   * 打印的前缀提示，这样方便快速找到log
    * @example
-   * console.log(' 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀', ...)
+   * console.log
+   * ('🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀', ...)
+   * preTip: (logMethod) => {
+   * if (logMethod === 'console.error') return '❌❌❌❌❌'
+   * if (logMethod === 'console.warn') return '🚨🚨🚨🚨🚨'
+   * if (logMethod === 'console.info') return '💡💡💡💡💡'
+   * if (logMethod === 'console.debug') return '🐞🐞🐞🐞🐞'
+   * return '🚀🚀🚀🚀🚀'
+   * }
    */
-  preTip?: string
+  preTip?: string | ((logMethod: string) => string)
   /** 每个参数分隔符，默认空字符串，你也可以使用换行符\n，分号；逗号，甚至猪猪🐖都行~ */
   splitBy?: boolean
   /** 
