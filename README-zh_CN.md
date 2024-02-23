@@ -54,6 +54,8 @@ npm i vite-plugin-enhance-log -D
 
 ```ts
 interface Options {
+  /** 应用在开发或build陌生, 默认都生效 */
+  apply?: 'serve' | 'build' | ((this: void, config: UserConfig, env: ConfigEnv) => boolean)
   /** 高亮文件名（firefox不支持） */
   colorFileName?: boolean
   /**

@@ -1,7 +1,7 @@
 import traverse from '@babel/traverse'
 import { parse } from '@babel/parser'
 import generate from '@babel/generator'
-import type { PluginOption } from 'vite'
+import type { ConfigEnv, PluginOption, UserConfig } from 'vite'
 import { createFilter } from 'vite'
 import type { StringLiteral } from '@babel/types'
 import { SourceMapConsumer } from 'source-map'
@@ -37,6 +37,8 @@ export type EnableFileName = boolean | {
   custom?: (filename: string) => string
 }
 export interface Options {
+  /** apply plugin in which mode, default all */
+  apply?: 'serve' | 'build' | ((this: void, config: UserConfig, env: ConfigEnv) => boolean)
   /** colorful filename，but The firefox can't recognize color labels, and garbled characters appear */
   colorFileName?: boolean
   /**
@@ -105,6 +107,7 @@ const DEFAULT_PRE_TIP = '🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀'
 
 export default function enhanceLogPlugin(options: Options = {}): PluginOption {
   const {
+    apply,
     colorFileName,
     logMethodReg = /console\.log/,
     preTip = DEFAULT_PRE_TIP,
@@ -127,6 +130,7 @@ export default function enhanceLogPlugin(options: Options = {}): PluginOption {
     configResolved(config) {
       root = config.root
     },
+    apply,
     enforce: 'post',
     async transform(code, id) {
       if (!filter(id))

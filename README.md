@@ -56,6 +56,8 @@ npm i vite-plugin-enhance-log -D
 
 ```ts
 interface Options {
+  /** apply plugin in which mode, default all */
+  apply?: 'serve' | 'build' | ((this: void, config: UserConfig, env: ConfigEnv) => boolean)
   /** colorful filename，but The firefox can't recognize color labels, and garbled characters appear */
   colorFileName?: boolean
   /**
