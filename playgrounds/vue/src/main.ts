@@ -1,7 +1,9 @@
 import { createApp } from 'vue'
+import packageJson from '../package.json' assert { type: 'json' }
 import App from './App.vue'
 import './index.css'
 
+console.log(packageJson)
 const app = createApp(App)
 
 app.mount('#app')

@@ -139,6 +139,7 @@ export default function enhanceLogPlugin(options: Options = {}): PluginOption {
       const ast = parse(code, {
         sourceType: 'unambiguous',
         sourceFilename: id,
+        plugins: ['importAssertions'],
       })
       const consumer = await new SourceMapConsumer(rawSourcemap as RawSourceMap)
 
